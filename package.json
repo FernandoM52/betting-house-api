@@ -4,7 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/server.js",
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "cross-env NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts",
+    "dev:load-envs": "dotenv -e .env.development",
+    "dev:migration:run": "npm run dev:load-envs prisma migrate deploy",
+    "dev:migration:generate": "npm run dev:load-envs prisma migrate dev",
+    "dev:seed": "npm run dev:load-envs prisma db seed",
+    "test": "cross-env NODE_ENV=test jest --passWithNoTests --runInBand",
+    "test:coverage": "cross-env NODE_ENV=test jest --passWithNoTests --runInBand --coverage --collectCoverageFrom='./src/**'",
+    "test:watch": "jest --watch --passWithNoTests --runInBand",
+    "test:load-envs": "dotenv -e .env.test",
+    "test:migration:run": "npm run test:load-envs prisma migrate deploy",
+    "test:migration:generate": "npm run test:load-envs prisma migrate dev",
+    "test:seed": "npm run test:load-envs prisma db seed"
   },
   "keywords": [],
   "author": "",
@@ -12,7 +25,8 @@
   "devDependencies": {
     "@types/express": "^4.17.18",
     "@types/jest": "^29.5.5",
-    "@types/pg": "^8.10.3",
+    "cross-env": "^7.0.3",
+    "dotenv-cli": "^7.3.0",
     "jest": "^29.7.0",
     "nodemon": "^3.0.1",
     "prisma": "^5.3.1",
