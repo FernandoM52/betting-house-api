@@ -2,6 +2,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "esModuleInterop": true,
+    "noImplicitAny": true,
     "module": "CommonJS",
     "moduleResolution": "Node",
     "baseUrl": "src",
@@ -13,5 +14,6 @@
   },
   "ts-node": {
     "esm": true
-  }
+  },
+  "include": ["src", "tests"]
 }
