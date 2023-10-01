@@ -7,11 +7,12 @@
     "moduleResolution": "Node",
     "baseUrl": "src",
     "paths": {
-      "@/*": [
-        "*"
-      ]
+      "@/*": ["*"]
     }
   },
+  "plugins":[{
+    "transform": "typescript-transform-paths"
+  }],
   "ts-node": {
     "esm": true
   },
