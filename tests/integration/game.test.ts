@@ -4,7 +4,12 @@ import app, { init } from '@/app';
 import { cleanDb } from '../helpers';
 import { faker } from '@faker-js/faker';
 import { prisma } from '@/config';
-import { createGame, gameWithouAwayTeam, gameWithouHomeTeam } from '../factories/games-factory';
+import {
+  createFinishedGame,
+  createGame,
+  gameWithouAwayTeam,
+  gameWithouHomeTeam
+} from '../factories/games-factory';
 import { createParticipant } from '../factories/participants-factory';
 import { createBet } from '../factories/bets-factory';
 
@@ -95,6 +100,18 @@ describe('POST /games/:id/finished', () => {
         awayTeamScore: body.awayTeamScore,
         isFinished: true,
       });
+    });
+
+    it('should respond with status 204 when game already finished', async () => {
+      const game = await createFinishedGame();
+      const body = {
+        homeTeamScore: faker.number.int({ min: 0, max: 10 }),
+        awayTeamScore: faker.number.int({ min: 0, max: 10 }),
+      };
+
+      const response = await server.post(`/games/${game.id}/finish`).send(body);
+
+      expect(response.status).toBe(httpStatus.NO_CONTENT);
     });
   });
 
