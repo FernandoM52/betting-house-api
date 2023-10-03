@@ -5,6 +5,8 @@ import { cleanDb } from '../helpers';
 import { faker } from '@faker-js/faker';
 import { prisma } from '@/config';
 import { createGame, gameWithouAwayTeam, gameWithouHomeTeam } from '../factories/games-factory';
+import { createParticipant } from '../factories/participants-factory';
+import { createBet } from '../factories/bets-factory';
 
 beforeAll(async () => {
   await init();
@@ -150,9 +152,10 @@ describe('GET /games', () => {
 
 describe('GET /games/:id', () => {
   describe('when params is valid', () => {
-    //TO DO: Implementar factory de bets para finalizar este teste.
     it('should respond with status 200 and the game object', async () => {
+      const participant = await createParticipant();
       const game = await createGame();
+      const bet = await createBet(game.id, participant.id);
 
       const { status, body } = await server.get(`/games/${game.id}`);
 
@@ -163,21 +166,21 @@ describe('GET /games/:id', () => {
         updatedAt: expect.any(String),
         homeTeamName: game.homeTeamName,
         awayTeamName: game.awayTeamName,
-        homeTeamScore: expect.any(Number),
-        awayTeamScore: expect.any(Number),
+        homeTeamScore: game.homeTeamScore,
+        awayTeamScore: game.awayTeamScore,
         isFinished: game.isFinished,
         bets: expect.arrayContaining([
           expect.objectContaining({
-            id: expect.any(Number),
+            id: bet.id,
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
-            homeTeamScore: expect.any(Number),
-            awayTeamScore: expect.any(Number),
-            amountBet: expect.any(Number),
-            gameId: expect.any(Number),
-            participantId: expect.any(Number),
-            status: expect.any(String),
-            amountWon: expect.any(Number) || null,
+            homeTeamScore: bet.homeTeamScore,
+            awayTeamScore: bet.awayTeamScore,
+            amountBet: bet.amountBet,
+            gameId: bet.gameId,
+            participantId: bet.participantId,
+            status: bet.status,
+            amountWon: bet.amountWon,
           }),
         ]),
       });

@@ -3,10 +3,12 @@ import { Participant } from '@prisma/client';
 import { prisma } from '@/config';
 
 export async function createParticipant(name?: string, balance?: number): Promise<Participant> {
+  const valueConvert = 100;
+
   return prisma.participant.create({
     data: {
       name: name || faker.person.fullName(),
-      balance: balance || faker.number.int({ min: 10, max: 100000 }),
+      balance: balance * valueConvert || faker.number.int({ min: 10, max: 100000 }) * valueConvert,
     },
   });
 }
