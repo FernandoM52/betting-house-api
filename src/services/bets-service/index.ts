@@ -1,7 +1,8 @@
 import betRepository from '@/repositories/bets-repository';
+import { unauthorizedError, gameBetError, insufficientBalanceError } from '@/errors';
+import participantService from '../participants-service';
+import gameService from '../games-service';
 import participantRepository from '@/repositories/participant-repository';
-import gameRepository from '@/repositories/games-repository';
-import { unauthorizedError, gameBetError } from '@/errors';
 
 export async function createBet(
   homeTeamScore: number,
@@ -10,21 +11,31 @@ export async function createBet(
   gameId: number,
   participantId: number,
 ) {
-  await validateParticipantAndGameId(participantId, gameId);
+  const participant = await participantService.getParticipant(participantId);
+  if (participant) throw unauthorizedError();
+  
+  const game = await gameService.getGame(gameId);
+  if (game.isFinished) throw gameBetError();
 
-  const valueConvert = 100;
-  const betValue = amountBet * valueConvert;
+  const betValue = await validateBetParticipant(participant.balance, amountBet);
 
   const bet = await betRepository.create(homeTeamScore, awayTeamScore, betValue, gameId, participantId);
+  await updateParticipantBalance(participant.id, participant.balance, betValue);
+
   return bet;
 }
 
-async function validateParticipantAndGameId(participantId: number, gameId: number) {
-  const participant = await participantRepository.findById(participantId);
-  if (!participant) throw unauthorizedError();
+async function validateBetParticipant(participantBalance: number, amountBet: number) {
+  const valueConvert = 100;
+  const betValue = amountBet * valueConvert;
 
-  const game = await gameRepository.findById(gameId);
-  if (!game) throw gameBetError();
+  if (betValue > participantBalance) throw insufficientBalanceError();
+  return betValue;
+}
+
+async function updateParticipantBalance(id: number, participantBalance: number, betValue: number,) {
+  const curentBalance = participantBalance - betValue;
+  await participantRepository.updateBalance(curentBalance, id);
 }
 
 const betService = {

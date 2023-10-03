@@ -1,5 +1,5 @@
 import { Participant } from '@prisma/client';
-import { minBalanceError } from '@/errors';
+import { minBalanceError, notFoundError } from '@/errors';
 import participantRepository from '@/repositories/participant-repository';
 
 export async function createParticipant(name: string, balance: number) {
@@ -12,6 +12,11 @@ export async function createParticipant(name: string, balance: number) {
 export async function getAllParticipants() {
   const participants = await participantRepository.findAll();
   return participants;
+}
+
+export async function getParticipant(participantId: number) {
+  const participant = await participantRepository.findById(participantId);
+  return participant;
 }
 
 async function validateBalance(balance: number) {
@@ -28,6 +33,7 @@ export type CreateParticipantParams = Pick<Participant, 'name' | 'balance'>;
 const participantService = {
   createParticipant,
   getAllParticipants,
+  getParticipant
 };
 
 export default participantService;

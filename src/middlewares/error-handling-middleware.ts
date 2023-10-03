@@ -32,7 +32,13 @@ export function handleApplicationErrors(
     });
   }
 
-  if (err.name === 'gameBetError') {
+  if (err.name === 'GameBetError') {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: err.message,
+    });
+  }
+
+  if (err.name === 'InsufficientBalanceError') {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message,
     });
