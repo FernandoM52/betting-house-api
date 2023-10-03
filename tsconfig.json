@@ -5,6 +5,7 @@
     "noImplicitAny": true,
     "module": "CommonJS",
     "moduleResolution": "Node",
+    "rootDirs": ["src", "tests"],
     "baseUrl": "src",
     "paths": {
       "@/*": ["*"]
