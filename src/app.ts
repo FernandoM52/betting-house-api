@@ -2,7 +2,8 @@ import 'express-async-errors';
 import express, { Express } from 'express';
 import cors from 'cors';
 import { connectDb, disconnectDb, loadEnv } from '@/config';
-import { participantsRouter } from '@/routers';
+import { gamesRouter, participantsRouter } from '@/routers';
+import { handleApplicationErrors } from './middlewares';
 
 loadEnv();
 
@@ -11,7 +12,9 @@ app
   .use(cors())
   .use(express.json())
   .get('/health', (_req, res) => res.send('OK!'))
-  .use('/participants', participantsRouter);
+  .use('/participants', participantsRouter)
+  .use('/games', gamesRouter)
+  .use(handleApplicationErrors);
 
 export function init(): Promise<Express> {
   connectDb();
