@@ -24,11 +24,11 @@ async function findById(gameId: number) {
   });
 
   if (!result) return null;
-  
+
   const game = {
     ...result,
     bets: result.Bet,
-  }
+  };
 
   delete game.Bet;
   return game;

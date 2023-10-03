@@ -76,8 +76,8 @@ describe('POST /games/:id/finished', () => {
     it('should respond with status 201 and the updated game object', async () => {
       const game = await createGame();
       const body = {
-        homeTeamScore: faker.number.int({min: 0, max: 10}),
-        awayTeamScore: faker.number.int({min: 0, max: 10}),
+        homeTeamScore: faker.number.int({ min: 0, max: 10 }),
+        awayTeamScore: faker.number.int({ min: 0, max: 10 }),
       };
 
       const response = await server.post(`/games/${game.id}/finish`).send(body);
@@ -150,7 +150,6 @@ describe('GET /games', () => {
 
 describe('GET /games/:id', () => {
   describe('when params is valid', () => {
-    
     //TO DO: Implementar factory de bets para finalizar este teste.
     it('should respond with status 200 and the game object', async () => {
       const game = await createGame();
@@ -199,7 +198,7 @@ describe('GET /games/:id', () => {
         homeTeamScore: expect.any(Number),
         awayTeamScore: expect.any(Number),
         isFinished: game.isFinished,
-        bets: []
+        bets: [],
       });
     });
   });
