@@ -1,4 +1,4 @@
-import { invalidParamsError, notFoundError } from '@/errors';
+import { gameAlreadyFinishedError, invalidParamsError, notFoundError } from '@/errors';
 import gameRepository from '@/repositories/games-repository';
 
 export async function createGame(homeTeamName: string, awayTeamName: string) {
@@ -8,6 +8,7 @@ export async function createGame(homeTeamName: string, awayTeamName: string) {
 
 export async function finishGame(gameId: number, homeTeamScore: number, awayTeamScore: number) {
   const game = await validateGameId(gameId);
+  if (game.isFinished) throw gameAlreadyFinishedError();
 
   const result = await gameRepository.finish(game.id, homeTeamScore, awayTeamScore);
   return result;

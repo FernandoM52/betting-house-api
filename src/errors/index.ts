@@ -5,3 +5,4 @@ export * from './not-found-error';
 export * from './unauthorized-error';
 export * from './game-bet-error';
 export * from './insufficient-balance-error';
+export * from './game-already-finished-error';
