@@ -31,8 +31,8 @@ describe('POST /participants', () => {
       const response = await server.post('/participants').send(body);
       const participants = await prisma.participant.findMany({});
 
-      expect(response.status).toBe(201);
       expect(participants).toHaveLength(1);
+      expect(response.status).toBe(httpStatus.CREATED);
       expect(response.body).toEqual({
         id: expect.any(Number),
         createdAt: expect.any(String),
