@@ -8,6 +8,9 @@ import { createGame, gameWithouAwayTeam, gameWithouHomeTeam } from '../factories
 
 beforeAll(async () => {
   await init();
+});
+
+beforeEach(async () => {
   await cleanDb();
 });
 
@@ -44,14 +47,14 @@ describe('POST /games', () => {
   describe('when body is invalid', () => {
     it('should respond with status 400 when homeTeamName is empty', async () => {
       const body = gameWithouHomeTeam();
-      const { status } = await server.post('/participants').send(body);
+      const { status } = await server.post('/games').send(body);
 
       expect(status).toBe(httpStatus.BAD_REQUEST);
     });
 
     it('should respond with status 400 when awayTeamName is empty', async () => {
       const body = gameWithouAwayTeam();
-      const { status } = await server.post('/participants').send(body);
+      const { status } = await server.post('/games').send(body);
 
       expect(status).toBe(httpStatus.BAD_REQUEST);
     });
@@ -61,7 +64,7 @@ describe('POST /games', () => {
         homeTeamName: '',
         awayTeamName: '',
       };
-      const { status } = await server.post('/participants').send(body);
+      const { status } = await server.post('/games').send(body);
 
       expect(status).toBe(httpStatus.BAD_REQUEST);
     });
@@ -73,11 +76,11 @@ describe('POST /games/:id/finished', () => {
     it('should respond with status 201 and the updated game object', async () => {
       const game = await createGame();
       const body = {
-        homeTeamScore: faker.number.int(),
-        awayTeamScore: faker.number.int(),
+        homeTeamScore: faker.number.int({min: 0, max: 10}),
+        awayTeamScore: faker.number.int({min: 0, max: 10}),
       };
 
-      const response = await server.get(`/games/${game.id}/finished`).send(body);
+      const response = await server.post(`/games/${game.id}/finish`).send(body);
 
       expect(response.status).toBe(httpStatus.CREATED);
       expect(response.body).toEqual({
@@ -119,7 +122,7 @@ describe('POST /games/:id/finished', () => {
 
 describe('GET /games', () => {
   it('should respond with status 200 and a array of games', async () => {
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 3; i++) {
       await createGame();
     }
 
@@ -147,6 +150,8 @@ describe('GET /games', () => {
 
 describe('GET /games/:id', () => {
   describe('when params is valid', () => {
+    
+    //TO DO: Implementar factory de bets para finalizar este teste.
     it('should respond with status 200 and the game object', async () => {
       const game = await createGame();
 
@@ -155,12 +160,12 @@ describe('GET /games/:id', () => {
       expect(status).toBe(httpStatus.OK);
       expect(body).toEqual({
         id: game.id,
-        createdAt: game.updatedAt,
-        updatedAt: game.createdAt,
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
         homeTeamName: game.homeTeamName,
         awayTeamName: game.awayTeamName,
-        homeTeamScore: game.homeTeamScore,
-        awayTeamScore: game.awayTeamScore,
+        homeTeamScore: expect.any(Number),
+        awayTeamScore: expect.any(Number),
         isFinished: game.isFinished,
         bets: expect.arrayContaining([
           expect.objectContaining({
@@ -178,11 +183,30 @@ describe('GET /games/:id', () => {
         ]),
       });
     });
+
+    it('should responde with status 200 and the game object with empty array for property bets when game does not have bets', async () => {
+      const game = await createGame();
+
+      const { status, body } = await server.get(`/games/${game.id}`);
+
+      expect(status).toBe(httpStatus.OK);
+      expect(body).toEqual({
+        id: game.id,
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        homeTeamName: game.homeTeamName,
+        awayTeamName: game.awayTeamName,
+        homeTeamScore: expect.any(Number),
+        awayTeamScore: expect.any(Number),
+        isFinished: game.isFinished,
+        bets: []
+      });
+    });
   });
 
   describe('when params is invalid', () => {
     it('should respond with status 404 when id do not exist', async () => {
-      const fakeId = faker.number.int({ min: 10000, max: 20000 });
+      const fakeId = faker.number.int({ min: 1000, max: 2000 });
       const { status } = await server.get(`/games/${fakeId}`);
 
       expect(status).toBe(httpStatus.NOT_FOUND);

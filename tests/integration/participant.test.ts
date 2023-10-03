@@ -12,6 +12,9 @@ import {
 
 beforeAll(async () => {
   await init();
+});
+
+beforeEach(async () => {
   await cleanDb();
 });
 
@@ -82,7 +85,7 @@ describe('POST /participants', () => {
 
 describe('GET /participants', () => {
   it('should respond with status 200 and a array of participants', async () => {
-    for (let i = 0; i < 2; i++) {
+    for (let i = 0; i < 3; i++) {
       await createParticipant();
     }
 
