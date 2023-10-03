@@ -13,7 +13,7 @@ export async function createBet(
 ) {
   const participant = await participantService.getParticipant(participantId);
   if (!participant) throw unauthorizedError();
-  
+
   const game = await gameService.getGame(gameId);
   if (game.isFinished) throw gameBetError();
 
@@ -33,7 +33,7 @@ async function validateBetParticipant(participantBalance: number, amountBet: num
   return betValue;
 }
 
-async function updateParticipantBalance(id: number, participantBalance: number, betValue: number,) {
+async function updateParticipantBalance(id: number, participantBalance: number, betValue: number) {
   const curentBalance = participantBalance - betValue;
   await participantRepository.updateBalance(curentBalance, id);
 }

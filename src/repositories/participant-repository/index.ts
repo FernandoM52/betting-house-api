@@ -27,7 +27,7 @@ const participantRepository = {
   create,
   findAll,
   findById,
-  updateBalance
+  updateBalance,
 };
 
 export default participantRepository;

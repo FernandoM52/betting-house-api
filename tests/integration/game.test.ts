@@ -148,6 +148,15 @@ describe('GET /games', () => {
       ]),
     );
   });
+
+  it('should respond with status 200 and a empty array when does not have games', async () => {
+    const { status, body } = await server.get('/games');
+    const games = await prisma.game.findMany({});
+
+    expect(games).toHaveLength(0);
+    expect(status).toBe(httpStatus.OK);
+    expect(body).toEqual([]);
+  });
 });
 
 describe('GET /games/:id', () => {

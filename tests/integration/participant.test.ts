@@ -106,4 +106,13 @@ describe('GET /participants', () => {
       ]),
     );
   });
+
+  it('should respond with status 200 and a empty array when does not have participants', async () => {
+    const { status, body } = await server.get('/participants');
+    const participants = await prisma.participant.findMany({});
+
+    expect(participants).toHaveLength(0);
+    expect(status).toBe(httpStatus.OK);
+    expect(body).toEqual([]);
+  });
 });
