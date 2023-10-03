@@ -1,6 +1,6 @@
 import 'express-async-errors';
 import express, { Express } from 'express';
-import { connectDb, disconnectDb, loadEnv } from '@/config'
+import { connectDb, disconnectDb, loadEnv } from '@/config';
 
 loadEnv();
 

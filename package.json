@@ -18,7 +18,8 @@
     "test:migration:run": "npm run test:load-envs prisma migrate deploy",
     "test:migration:generate": "npm run test:load-envs prisma migrate dev",
     "test:seed": "npm run test:load-envs prisma db seed",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix --ext .js,.ts ."
   },
   "keywords": [],
   "author": "",

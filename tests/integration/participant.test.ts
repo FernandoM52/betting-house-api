@@ -58,7 +58,7 @@ describe('POST /participants', () => {
       const body = {
         name: faker.person.fullName(),
         balance: faker.number.int({ max: 999 }),
-      }
+      };
       const { status } = await server.post('/participants').send(body);
 
       expect(status).toBe(httpStatus.BAD_REQUEST);
@@ -73,6 +73,5 @@ describe('POST /participants', () => {
 
       expect(status).toBe(httpStatus.BAD_REQUEST);
     });
-    
   });
 });
