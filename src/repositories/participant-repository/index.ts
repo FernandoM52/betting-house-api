@@ -10,9 +10,16 @@ async function findAll() {
   return await prisma.participant.findMany({});
 }
 
+async function findById(id: number) {
+  return await prisma.participant.findFirst({
+    where: { id },
+  });
+}
+
 const participantRepository = {
   create,
   findAll,
+  findById,
 };
 
 export default participantRepository;

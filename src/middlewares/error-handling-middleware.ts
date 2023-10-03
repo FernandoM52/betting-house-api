@@ -8,9 +8,6 @@ export function handleApplicationErrors(
   res: Response,
   _next: NextFunction,
 ) {
-  /* eslint-disable-next-line no-console */
-  console.log({ err, errName: err.name });
-
   if (err.name === 'MinBalanceError') {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message,
@@ -24,6 +21,18 @@ export function handleApplicationErrors(
   }
 
   if (err.name === 'InvalidParamsError') {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: err.message,
+    });
+  }
+
+  if (err.name === 'UnauthorizedError') {
+    return res.status(httpStatus.UNAUTHORIZED).send({
+      message: err.message,
+    });
+  }
+
+  if (err.name === 'gameBetError') {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: err.message,
     });

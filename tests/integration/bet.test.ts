@@ -24,9 +24,9 @@ describe('POST /bets', () => {
     const generateValidBody = (gameId: number, participantId: number) => ({
       gameId,
       participantId,
-      homeTeamScore: faker.number.int({ min: 0 }),
-      awayTeamScore: faker.number.int({ min: 0 }),
-      amountBet: faker.number.int({ min: 2, max: 10 }) * valueConvert,
+      homeTeamScore: faker.number.int({ min: 0, max: 10 }),
+      awayTeamScore: faker.number.int({ min: 0, max: 10 }),
+      amountBet: faker.number.int({ min: 2, max: 10 }),
     });
 
     it('should respond with status 201 and create a bet', async () => {
@@ -45,7 +45,7 @@ describe('POST /bets', () => {
         updatedAt: expect.any(String),
         homeTeamScore: body.homeTeamScore,
         awayTeamScore: body.awayTeamScore,
-        amountBet: body.amountBet,
+        amountBet: body.amountBet * valueConvert,
         gameId: game.id,
         participantId: participant.id,
         status: 'PENDING',
@@ -57,7 +57,6 @@ describe('POST /bets', () => {
   describe('when body is invalid', () => {
     it('should respond with status 400 when homeTeamScore is empty', async () => {
       const body = buildBetReturn('homeTeamScore');
-      console.log(body);
       const { status } = await server.post('/bets').send(body);
 
       expect(status).toBe(httpStatus.BAD_REQUEST);

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { validateBody } from '@/middlewares';
 import { createGameSchema, finishGameSchema } from '@/schemas';
-import { createGame, finishGame, getAllGames, getGame } from '@/controllers/games-controller';
+import { createGame, finishGame, getAllGames, getGame } from '@/controllers';
 
 const gamesRouter = Router();
 gamesRouter.post('/', validateBody(createGameSchema), createGame);
