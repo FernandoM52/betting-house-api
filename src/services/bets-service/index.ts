@@ -12,7 +12,7 @@ export async function createBet(
   participantId: number,
 ) {
   const participant = await participantService.getParticipant(participantId);
-  if (participant) throw unauthorizedError();
+  if (!participant) throw unauthorizedError();
   
   const game = await gameService.getGame(gameId);
   if (game.isFinished) throw gameBetError();

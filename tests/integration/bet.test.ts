@@ -22,11 +22,11 @@ describe('POST /bets', () => {
   describe('when body is valid', () => {
     const valueConvert = 100;
     const generateValidBody = (gameId: number, participantId: number) => ({
-      gameId,
-      participantId,
       homeTeamScore: faker.number.int({ min: 0, max: 10 }),
       awayTeamScore: faker.number.int({ min: 0, max: 10 }),
       amountBet: faker.number.int({ min: 2, max: 10 }),
+      gameId,
+      participantId,
     });
 
     it('should respond with status 201 and create a bet', async () => {
