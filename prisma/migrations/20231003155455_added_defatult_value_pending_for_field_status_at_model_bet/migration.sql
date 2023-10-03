@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "bets" ALTER COLUMN "status" SET DEFAULT 'PENDING';
