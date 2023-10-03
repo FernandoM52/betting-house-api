@@ -4,7 +4,11 @@ import app, { init } from '@/app';
 import { cleanDb } from '../helpers';
 import { faker } from '@faker-js/faker';
 import { prisma } from '@/config';
-import { participantWithoutBalance, participantWithoutName } from '../factories/participants-factory';
+import {
+  createParticipant,
+  participantWithoutBalance,
+  participantWithoutName
+} from '../factories/participants-factory';
 
 beforeAll(async () => {
   await init();
@@ -17,24 +21,24 @@ describe('POST /participants', () => {
   describe('when body is valid', () => {
     const generateValidBody = () => ({
       name: faker.person.fullName(),
-      balance: faker.number.int({ min: 1000 }),
+      balance: faker.number.int({ min: 10, max: 100000 }),
     });
 
-    it('should create a participant and respond with status 201', async () => {
+    it('should respond with status 201 and create a participant', async () => {
+      const valueConvert = 100;
       const body = generateValidBody();
-      const response = await server.post('/participants').send(body);
 
-      const participant = await prisma.participant.findUnique({
-        where: { id: response.body.id },
-      });
+      const response = await server.post('/participants').send(body);
+      const participants = await prisma.participant.findMany({});
 
       expect(response.status).toBe(201);
+      expect(participants).toHaveLength(1);
       expect(response.body).toEqual({
-        id: participant.id,
+        id: expect.any(Number),
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
         name: body.name,
-        balance: body.balance,
+        balance: body.balance * valueConvert,
       });
     });
   });
@@ -57,7 +61,7 @@ describe('POST /participants', () => {
     it('should respond with status 400 when balance is lower then R$10,00', async () => {
       const body = {
         name: faker.person.fullName(),
-        balance: faker.number.int({ max: 999 }),
+        balance: faker.number.int({ max: 9 }),
       };
       const { status } = await server.post('/participants').send(body);
 
@@ -73,5 +77,30 @@ describe('POST /participants', () => {
 
       expect(status).toBe(httpStatus.BAD_REQUEST);
     });
+  });
+});
+
+describe('GET /participants', () => {
+  it('should respond with status 200 and a array of participants', async () => {
+    for (let i = 0; i < 2; i++) {
+      await createParticipant();
+    }
+
+    const { status, body } = await server.get('/participants');
+    const participants = await prisma.participant.findMany({});
+    
+    expect(participants).toHaveLength(3);
+    expect(status).toBe(httpStatus.OK);
+    expect(body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.any(Number),
+          name: expect.any(String),
+          balance: expect.any(Number),
+          createdAt: expect.any(String),
+          updatedAt: expect.any(String),
+        })
+      ])
+    );
   });
 });

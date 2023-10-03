@@ -1,13 +1,13 @@
 import { prisma } from '@/config';
 
 async function create(name: string, balance: number) {
-  return prisma.participant.create({
+  return await prisma.participant.create({
     data: { name, balance }
   });
 }
 
 async function findAll() {
-  return prisma.participant.findMany({});
+  return await prisma.participant.findMany({});
 }
 
 const participantRepository = {

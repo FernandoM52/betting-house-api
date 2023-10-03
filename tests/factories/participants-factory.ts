@@ -2,11 +2,11 @@ import { faker } from '@faker-js/faker';
 import { Participant } from '@prisma/client';
 import { prisma } from '@/config';
 
-export async function createParticipant(params: Partial<Participant> = {}): Promise<Participant> {
+export async function createParticipant(name?: string, balance?: number): Promise<Participant> {
   return prisma.participant.create({
     data: {
-      name: params.name || faker.person.fullName(),
-      balance: params.balance || faker.number.int({ min: 1000 }),
+      name: name || faker.person.fullName(),
+      balance: balance || faker.number.int({ min: 10, max: 100000 }),
     },
   });
 }
@@ -14,7 +14,7 @@ export async function createParticipant(params: Partial<Participant> = {}): Prom
 export function participantWithoutName() {
   return {
     name: '',
-    balance: faker.number.int({ min: 1000 }),
+    balance: faker.number.int({ min: 10, max: 100000 }),
   };
 }
 
