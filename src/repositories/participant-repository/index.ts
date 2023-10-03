@@ -2,7 +2,7 @@ import { prisma } from '@/config';
 
 async function create(name: string, balance: number) {
   return await prisma.participant.create({
-    data: { name, balance }
+    data: { name, balance },
   });
 }
 
@@ -13,6 +13,6 @@ async function findAll() {
 const participantRepository = {
   create,
   findAll,
-}
+};
 
 export default participantRepository;

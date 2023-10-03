@@ -12,7 +12,7 @@ app
   .use(express.json())
   .get('/health', (_req, res) => res.send('OK!'))
   .use('/participants', participantsRouter);
-  
+
 export function init(): Promise<Express> {
   connectDb();
   return Promise.resolve(app);

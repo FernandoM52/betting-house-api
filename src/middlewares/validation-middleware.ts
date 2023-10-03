@@ -3,11 +3,11 @@ import { invalidDataError } from '@/errors';
 import { ObjectSchema } from 'joi';
 import httpStatus from 'http-status';
 
-export function validateBody<T>(schema: ObjectSchema<T>): ValidationMiddleware{
+export function validateBody<T>(schema: ObjectSchema<T>): ValidationMiddleware {
   return validate(schema, 'body');
 }
 
-export function validateParams<T>(schema: ObjectSchema<T>): ValidationMiddleware{
+export function validateParams<T>(schema: ObjectSchema<T>): ValidationMiddleware {
   return validate(schema, 'params');
 }
 

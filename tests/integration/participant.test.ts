@@ -7,7 +7,7 @@ import { prisma } from '@/config';
 import {
   createParticipant,
   participantWithoutBalance,
-  participantWithoutName
+  participantWithoutName,
 } from '../factories/participants-factory';
 
 beforeAll(async () => {
@@ -88,7 +88,7 @@ describe('GET /participants', () => {
 
     const { status, body } = await server.get('/participants');
     const participants = await prisma.participant.findMany({});
-    
+
     expect(participants).toHaveLength(3);
     expect(status).toBe(httpStatus.OK);
     expect(body).toEqual(
@@ -99,8 +99,8 @@ describe('GET /participants', () => {
           balance: expect.any(Number),
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
-        })
-      ])
+        }),
+      ]),
     );
   });
 });

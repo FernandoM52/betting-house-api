@@ -4,6 +4,6 @@ export type ApplicationError = {
 };
 
 export type ParticipantBody = {
-  name: string,
-  balance: number
-}
+  name: string;
+  balance: number;
+};
