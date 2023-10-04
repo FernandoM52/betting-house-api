@@ -4,12 +4,7 @@ import app, { init } from '@/app';
 import { cleanDb } from '../helpers';
 import { faker } from '@faker-js/faker';
 import { prisma } from '@/config';
-import {
-  createFinishedGame,
-  createGame,
-  gameWithouAwayTeam,
-  gameWithouHomeTeam
-} from '../factories/games-factory';
+import { createFinishedGame, createGame, gameWithouAwayTeam, gameWithouHomeTeam } from '../factories/games-factory';
 import { createParticipant } from '../factories/participants-factory';
 import { createBet } from '../factories/bets-factory';
 

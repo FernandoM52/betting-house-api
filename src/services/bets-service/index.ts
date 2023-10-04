@@ -1,8 +1,8 @@
-import betRepository from '@/repositories/bets-repository';
 import { unauthorizedError, gameBetError, insufficientBalanceError } from '@/errors';
+import betRepository from '@/repositories/bets-repository';
 import participantService from '../participants-service';
 import gameService from '../games-service';
-import participantRepository from '@/repositories/participant-repository';
+import { Status } from '@prisma/client';
 
 export async function createBet(
   homeTeamScore: number,
@@ -18,11 +18,15 @@ export async function createBet(
   if (game.isFinished) throw gameBetError();
 
   const betValue = await validateBetParticipant(participant.balance, amountBet);
-
   const bet = await betRepository.create(homeTeamScore, awayTeamScore, betValue, gameId, participantId);
-  await updateParticipantBalance(participant.id, participant.balance, betValue);
 
+  const curentBalance = participant.balance - betValue;
+  await participantService.updateParticipantBalance(participant.id, curentBalance);
   return bet;
+}
+
+export async function updateBetStatusAndAmount(betId: number, status: Status, amountWon: number) {
+  await betRepository.updateBetStatusAndAmount(betId, status, amountWon);
 }
 
 async function validateBetParticipant(participantBalance: number, amountBet: number) {
@@ -33,13 +37,9 @@ async function validateBetParticipant(participantBalance: number, amountBet: num
   return betValue;
 }
 
-async function updateParticipantBalance(id: number, participantBalance: number, betValue: number) {
-  const curentBalance = participantBalance - betValue;
-  await participantRepository.updateBalance(curentBalance, id);
-}
-
 const betService = {
   createBet,
+  updateBetStatusAndAmount,
 };
 
 export default betService;

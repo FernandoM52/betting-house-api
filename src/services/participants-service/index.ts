@@ -19,6 +19,10 @@ export async function getParticipant(participantId: number) {
   return participant;
 }
 
+export async function updateParticipantBalance(participantId: number, curentBalance: number) {
+  await participantRepository.updateBalance(participantId, curentBalance);
+}
+
 async function validateBalance(balance: number) {
   const minBalance = 1000;
   const valueConvert = 100;
@@ -34,6 +38,7 @@ const participantService = {
   createParticipant,
   getAllParticipants,
   getParticipant,
+  updateParticipantBalance,
 };
 
 export default participantService;

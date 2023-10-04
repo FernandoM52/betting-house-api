@@ -16,7 +16,7 @@ export async function createFinishedGame(homeTeamName?: string, awayTeamName?: s
     data: {
       homeTeamName: homeTeamName || faker.lorem.word(),
       awayTeamName: awayTeamName || faker.lorem.word(),
-      isFinished: true
+      isFinished: true,
     },
   });
 }

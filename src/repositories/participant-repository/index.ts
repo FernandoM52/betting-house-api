@@ -16,7 +16,7 @@ async function findById(id: number) {
   });
 }
 
-async function updateBalance(balance: number, id: number) {
+async function updateBalance(id: number, balance: number) {
   return await prisma.participant.update({
     where: { id },
     data: { balance },
