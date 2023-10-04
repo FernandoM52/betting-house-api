@@ -1,12 +1,14 @@
 {
-  "name": "projeto27-betting-house-api",
+  "name": "betting-house-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "tsc -p tsconfig.build.json && tscpaths -p tsconfig.build.json -s ./src -o ./dist",
-    "start:prod": "node dist/server.js",
+    "start": "node dist/server.js",
+    "start:prod": "npm run prod:migration && npm start",
+    "prod:migration": "prisma migrate deploy",
     "dev": "cross-env NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node -r tsconfig-paths/register ./src/server.ts' -e ts",
     "dev:load-envs": "dotenv -e .env.development",
     "dev:migration:run": "npm run dev:load-envs prisma migrate deploy",
@@ -23,7 +25,7 @@
     "lint:fix": "eslint --fix --ext .js,.ts ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Fernando Martins",
   "license": "ISC",
   "devDependencies": {
     "@faker-js/faker": "^8.1.0",
