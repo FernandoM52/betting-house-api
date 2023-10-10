@@ -42,6 +42,7 @@ async function validateGameId(gameId: number) {
 async function finishGameProcess(gameId: number, homeTeamScore: number, awayTeamScore: number) {
   const winningBets = await betRepository.getWinningBets(gameId, homeTeamScore, awayTeamScore);
   const winningBetsTotalAmount = winningBets.reduce((total, bet) => total + bet.amountBet, 0);
+  const winningBetIds = new Set(winningBets.map((winningBet) => winningBet.id));
 
   const totalBets = await betRepository.getAllBets(gameId);
   const betsTotalAmount = totalBets.reduce((total, bet) => total + bet.amountBet, 0);
@@ -53,7 +54,7 @@ async function finishGameProcess(gameId: number, homeTeamScore: number, awayTeam
   }
 
   for (const bet of totalBets) {
-    if (!winningBets.some((winningBet) => winningBet.id === bet.id)) {
+    if (!winningBetIds.has(bet.id)) {
       await betService.updateBetStatusAndAmount(bet.id, 'LOST', 0);
     }
   }
