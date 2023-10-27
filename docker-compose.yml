@@ -4,27 +4,29 @@ services:
     container_name: db
     ports:
       - "5433:5432"
-    environment:
-      POSTGRES_USER: ${POSTGRES_USERNAME}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DATABASE: ${POSTGRES_DATABASE}
+    env_file:
+      - .env
     volumes:
       - betting_house_volume:/var/lib/postgresql/data
+    networks:
+      - betting-house-network
 
   app:
-    image: node:alpine
+    build: .
     container_name: betting-house-api-compose
-    working_dir: /app
-    volumes:
-      - .:/app
     ports:
-      - "5000:5000"
-    environment:
-      - DATABASE_URL=postgresql://${POSTGRES_USERNAME}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DATABASE}?schema=public
-    command: 
-      sh -c "npm install && npx prisma generate && npx prisma migrate deploy && npm start"
+      - "80:5000"
+    env_file:
+      - .env
+    networks:
+      - betting-house-network
     depends_on:
       - db
+
+networks:
+  betting-house-network:
+    name: betting-house-network
+    driver: bridge
 
 volumes:
   betting_house_volume:
