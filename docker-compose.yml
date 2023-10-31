@@ -9,7 +9,7 @@ services:
     volumes:
       - betting_house_volume:/var/lib/postgresql/data
     networks:
-      - betting-house-network
+      - my-network
 
   app:
     build: .
@@ -19,13 +19,13 @@ services:
     env_file:
       - .env
     networks:
-      - betting-house-network
+      - my-network
     depends_on:
       - db
 
 networks:
-  betting-house-network:
-    name: betting-house-network
+  my-network:
+    name: my-network
     driver: bridge
 
 volumes:
