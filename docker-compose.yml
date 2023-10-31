@@ -15,7 +15,7 @@ services:
     build: .
     container_name: betting-house-api-compose
     ports:
-      - "80:5000"
+      - "5000:5000"
     env_file:
       - .env
     networks:
